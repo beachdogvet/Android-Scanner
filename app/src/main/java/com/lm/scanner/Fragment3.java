@@ -42,6 +42,7 @@ public class Fragment3 extends Fragment {
         return view;
     }
 
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.add(1, Common.OPTIONS_MENU_ITEM_ID_1, 1, "Options 1");
@@ -214,6 +215,7 @@ public class Fragment3 extends Fragment {
         spinner.setAdapter(spinnerAdapter);
     }
 
+    //Get confirmation from User before deleting location
     private void ConfirmDelete(String locationText) {
 
         Builder alertDialog = new Builder(getActivity());
