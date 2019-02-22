@@ -1,12 +1,13 @@
 package com.lm.scanner;
 
 
+import android.app.Activity;
 import android.arch.lifecycle.Lifecycle;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,7 +19,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import static android.support.v7.app.AlertDialog.*;
+
+import static android.support.v7.app.AlertDialog.Builder;
 
 
 public class Fragment3 extends Fragment {
@@ -29,6 +31,7 @@ public class Fragment3 extends Fragment {
     private ArrayAdapter<SpinnerItem> spinnerAdapter;
     private Spinner spinner;
 
+    //Constructor
     public Fragment3() {
     }
 
@@ -36,10 +39,8 @@ public class Fragment3 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         setHasOptionsMenu(true);
-        View view =  inflater.inflate(R.layout.fragment_fragment3, container, false);
-        return view;
+        return(inflater.inflate(R.layout.fragment_fragment3, container, false));
     }
 
 
@@ -67,7 +68,15 @@ public class Fragment3 extends Fragment {
 
 
             case Common.EXIT_APPLICATION:
-                getActivity().finish();
+
+
+                Activity a = getActivity();
+                if(a != null)
+                {
+                    a.finish();
+                }
+
+
                 System.exit(0);
         }
 
@@ -76,6 +85,7 @@ public class Fragment3 extends Fragment {
 
 
     @Override
+    @NonNull
     public Lifecycle getLifecycle() {
         return super.getLifecycle();
     }
@@ -86,93 +96,117 @@ public class Fragment3 extends Fragment {
         super.onActivityCreated(savedInstanceState);
         GetLocations();
 
-        /** User selected an item from the Current Locations list */
+        /*  User selected an item from the Current Locations list */
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
 
-                SpinnerItem selectedItem = (SpinnerItem)adapterView.getItemAtPosition(pos);
-                TextView currentLocationText  = getView().findViewById(R.id.txtCurrentLocation);
-                currentLocationText.setText(selectedItem.value);
-                selectedLocationId = selectedItem.valueId;
+                View view1 = getView();
+                if(view1 != null)
+                {
+                    SpinnerItem selectedItem = (SpinnerItem)adapterView.getItemAtPosition(pos);
+                    TextView currentLocationText  = view1.findViewById(R.id.txtCurrentLocation);
+                    currentLocationText.setText(selectedItem.value);
+                    selectedLocationId = selectedItem.valueId;
+                }
+
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) { }
         });
 
 
-        /****************************
-         * Update Location Button
-         ****************************/
+        /*
+           Update Location Button
+         */
         Button btnUpdateLocation = getView().findViewById(R.id.btnUpdateLocation);
         btnUpdateLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                TextView tv  = getView().findViewById(R.id.txtCurrentLocation);
-                newLocationText  = tv.getText().toString().trim();
+                View view2 = getView();
+                if(view2 != null) {
 
-                if(newLocationText.length() > 0) {
+                    TextView tv  = view2.findViewById(R.id.txtCurrentLocation);
+                    newLocationText  = tv.getText().toString().trim();
 
-                    DatabaseHelper dbhelper = new DatabaseHelper(getActivity());
-                    boolean status = dbhelper.UpdateLocation(selectedLocationId,newLocationText);
-                    if(status == true) {
-                        Common.showMessage("Update Status","Location updated",getActivity(),Common.MESSAGE_TYPE_SUCCESS );
-                        GetLocations();
-                        tv.setText("");
+                    if(newLocationText.length() > 0) {
+
+                        DatabaseHelper dbhelper = new DatabaseHelper(getActivity());
+                        boolean status = dbhelper.UpdateLocation(selectedLocationId,newLocationText);
+                        if(status) {
+                            Common.showMessage("Update Status","Location updated",getActivity(),Common.MESSAGE_TYPE_SUCCESS );
+                            GetLocations();
+                            tv.setText("");
+                        }
+                        else {
+                            Common.showMessage("Update Status","Error updating Location",getActivity(),Common.MESSAGE_TYPE_ERROR );
+                        }
                     }
                     else {
-                        Common.showMessage("Update Status","Error updating Location",getActivity(),Common.MESSAGE_TYPE_ERROR );
+                        Common.showMessage("Input Error","Please enter a value before submitting.",getActivity(),Common.MESSAGE_TYPE_ERROR );
                     }
                 }
-                else {
-                    Common.showMessage("Input Error","Please enter a value before submitting.",getActivity(),Common.MESSAGE_TYPE_ERROR );
-                }
+
             }
         });
 
-        /****************************
-         * Add New Location button
-         ****************************/
+        /*
+          Add New Location button
+         */
         Button btnNewLocation = getView().findViewById(R.id.btnNewLocation);
         btnNewLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                TextView tv  = getView().findViewById(R.id.txtNewLocation);
-                newLocationText  = tv.getText().toString().trim();
+                View view3 = getView();
+                if(view3 != null) {
 
-                if(newLocationText.length() > 0)
-                {
-                    DatabaseHelper dbhelper = new DatabaseHelper(getActivity());
-                    boolean status = dbhelper.AddNewLocation(newLocationText);
+                    TextView tv  = view3.findViewById(R.id.txtNewLocation);
+                    newLocationText  = tv.getText().toString().trim();
 
-                    if(status == true) {
-                        Common.showMessage("Add New Location Status","Location added",getActivity(),Common.MESSAGE_TYPE_SUCCESS );
-                        GetLocations();
-                        tv.setText("");
+                    if(newLocationText.length() > 0)
+                    {
+                        DatabaseHelper dbhelper = new DatabaseHelper(getActivity());
+                        boolean status = dbhelper.AddNewLocation(newLocationText);
+
+                        if(status) {
+                            Common.showMessage("Add New Location Status","Location added",getActivity(),Common.MESSAGE_TYPE_SUCCESS );
+                            GetLocations();
+                            tv.setText("");
+                        }
+                        else {
+                            Common.showMessage("Add New Location Status","Error adding Location",getActivity(),Common.MESSAGE_TYPE_ERROR );
+                        }
                     }
                     else {
-                        Common.showMessage("Add New Location Status","Error adding Location",getActivity(),Common.MESSAGE_TYPE_ERROR );
+                        Common.showMessage("Input Error","Please enter a value before submitting.",getActivity(),Common.MESSAGE_TYPE_ERROR );
                     }
                 }
-                else {
-                    Common.showMessage("Input Error","Please enter a value before submitting.",getActivity(),Common.MESSAGE_TYPE_ERROR );
-                }
+
             }
         });
 
 
-        /*****************************************
-         * Confirm delete action before Deleting
-         ******************************************/
+        /*
+            Confirm delete action before Deleting
+         */
         Button btnDeleteLocation = getView().findViewById(R.id.btnDeleteLocation);
         btnDeleteLocation.setOnClickListener(new View.OnClickListener() {
             @Override
+
             public void onClick(View view) {
-                TextView tv  = getView().findViewById(R.id.txtCurrentLocation);
-                String LocationText  = tv.getText().toString();
-                ConfirmDelete(LocationText);
+
+                View view4 = getView();
+                if(view4 != null)
+                {
+                    TextView tv  = view4.findViewById( R.id.txtCurrentLocation);
+                    if(tv != null) {
+                        String LocationText = tv.getText().toString();
+                        ConfirmDelete(LocationText);
+                    }
+                }
+
             }
         });
     }
@@ -185,7 +219,7 @@ public class Fragment3 extends Fragment {
         DatabaseHelper dbhelper = new DatabaseHelper(getActivity());
         boolean status = dbhelper.DeleteLocation(selectedLocationId);
 
-        if(status == true) {
+        if(status) {
             Common.showMessage("Delete Location Status","Location deleted",getActivity(),Common.MESSAGE_TYPE_SUCCESS );
             GetLocations();
         }
@@ -199,45 +233,55 @@ public class Fragment3 extends Fragment {
      ******************************************/
     private void GetLocations() {
 
-        spinner = (Spinner)getActivity().findViewById(R.id.dlCurrentLocations);
+        Activity a = getActivity();
+        if(a != null)
+        {
+            spinner = a.findViewById(R.id.dlCurrentLocations);
 
-        //Get locations from database
-        DatabaseHelper dbhelper = new DatabaseHelper(getActivity());
-        java.util.List<SpinnerItem> locations = dbhelper.GetLocations();
+            //Get locations from database
+            DatabaseHelper dbhelper = new DatabaseHelper(getActivity());
+            java.util.List<SpinnerItem> locations = dbhelper.GetLocations();
 
-         spinnerAdapter = new ArrayAdapter<SpinnerItem>(getActivity(),
-                android.R.layout.simple_spinner_item, locations);
+            spinnerAdapter = new ArrayAdapter<>(getActivity(),
+                    android.R.layout.simple_spinner_item, locations);
 
-        // Specify the layout to use when the list of choices appears
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            // Specify the layout to use when the list of choices appears
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        // Apply the adapter to the spinner
-        spinner.setAdapter(spinnerAdapter);
+            // Apply the adapter to the spinner
+            spinner.setAdapter(spinnerAdapter);
+
+        }
+
     }
 
     //Get confirmation from User before deleting location
     private void ConfirmDelete(String locationText) {
 
-        Builder alertDialog = new Builder(getActivity());
-        alertDialog.setTitle("Delete Confirmation");
-        alertDialog.setMessage("Delete Location => " + locationText + "?");
-        alertDialog.setIcon(R.drawable.info_icon);
-        alertDialog.setCancelable(false);
-        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        Activity a = getActivity();
+        if(a != null) {
+            Builder alertDialog = new Builder(getActivity());
+            alertDialog.setTitle("Delete Confirmation");
+            alertDialog.setMessage("Delete Location => " + locationText + "?");
+            alertDialog.setIcon(R.drawable.info_icon);
+            alertDialog.setCancelable(false);
+            alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
                     DeleteLocation();
-            }
-        });
-        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                }
+            });
+            alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-            }
-        });
-        alertDialog.create().show();
+                }
+            });
+            alertDialog.create().show();
+        }
+
     }
 
 
