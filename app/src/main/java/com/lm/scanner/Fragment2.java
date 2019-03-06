@@ -2,6 +2,7 @@ package com.lm.scanner;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -9,6 +10,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 
@@ -18,6 +21,7 @@ import android.widget.TextView;
 public class Fragment2 extends Fragment {
 
     private TextView textView;
+
     public Fragment2() {
         // Required empty public constructor
     }
@@ -31,8 +35,8 @@ public class Fragment2 extends Fragment {
 
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_fragment2, container, false);
-        textView = view.findViewById(R.id.txt_display);
-        textView.setText(getArguments().getString("messageToFragment"));
+//        textView = view.findViewById(R.id.txt_display);
+//        textView.setText(getArguments().getString("messageToFragment"));
         return view;
     }
 
@@ -69,5 +73,35 @@ public class Fragment2 extends Fragment {
         }
 
         return true;
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+
+
+        Spinner spinner = (Spinner)getActivity().findViewById(R.id.slLocations);
+
+        //Get locations from database
+        DatabaseHelper dbhelper = new DatabaseHelper(getActivity());
+        java.util.List<SpinnerItem> locations = dbhelper.GetLocations();
+
+        ArrayAdapter<SpinnerItem> spinnerAdapter = new ArrayAdapter<SpinnerItem>(getActivity(),
+                android.R.layout.simple_spinner_item, locations);
+
+        // Specify the layout to use when the list of choices appears
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Apply the adapter to the spinner
+        spinner.setAdapter(spinnerAdapter);
+
+
+
+
+
+
+
     }
 }

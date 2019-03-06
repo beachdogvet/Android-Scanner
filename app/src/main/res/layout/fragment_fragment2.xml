@@ -4,14 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment2">
+    tools:context=".Fragment2"
+    android:orientation="vertical"
+    >
 
-    <TextView
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:id="@+id/btnAddbarcode"
+        android:text="Add Barcode"/>
+
+
+
+    <Spinner
+        android:id="@+id/slLocations"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:gravity="center"
-        android:id="@+id/txt_display"/>
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown"
+        android:background="@drawable/spinner_background"
+        />
+
 
 </LinearLayout>

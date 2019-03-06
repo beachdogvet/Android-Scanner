@@ -1,11 +1,9 @@
 package com.lm.scanner;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentContainer;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 /**
@@ -101,7 +98,11 @@ public class Fragment1 extends Fragment {
 
         super.onActivityCreated(savedInstanceState);
 
-        ListView listView = (ListView)getActivity().findViewById(R.id.lvBarcodes);
+       ListView listView = (ListView)getActivity().findViewById(R.id.lvBarcodes);
+
+
+
+
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, barcodes);
         listView.setAdapter(arrayAdapter);
 
